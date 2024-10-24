@@ -1,6 +1,10 @@
 import { Suspense, lazy, useState } from 'react'
-import '@/App.css'
+import { Routes, Route, Outlet, Link } from "react-router-dom";
 import lessStyles from '@/app.less'
+import '@/App.css'
+
+import { Login } from '@/pages/Login'
+import { Home } from '@/pages/Home'
 
 // prefetch
 const PreFetchDemo = lazy(
@@ -40,22 +44,18 @@ function App() {
   }
 
   return (
-    <div>
-      <h2 className="text-4xl font-bold underline">Hello Xiloong</h2>
-      <div className={lessStyles.lessBox}>
-        <button className="btn w-64 rounded-full">Button</button>
-      </div>
-      {show && (
-        <>
-          <Suspense fallback={null}>
-            <PreloadDemo />
-          </Suspense>
-          <Suspense fallback={null}>
-            <PreFetchDemo />
-          </Suspense>
-        </>
-      )}
-    </div>
+    <Routes>
+      <Route path="/" element={<Login />}>
+        <Route index element={<Home />} />
+        {/* <Route path="about" element={<About />} /> */}
+        {/* <Route path="dashboard" element={<Dashboard />} /> */}
+
+        {/* Using path="*"" means "match anything", so this route
+              acts like a catch-all for URLs that we don't have explicit
+              routes for. */}
+        {/* <Route path="*" element={<NoMatch />} /> */}
+      </Route>
+    </Routes>
   )
 }
 
