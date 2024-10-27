@@ -1,35 +1,45 @@
 import { useState } from "react";
-import htttpService from '@/service/service';
+import { userLoginPost } from '@/service/api';
+import Spline from '@splinetool/react-spline';
+import { encryptedPassword } from '@/utils/crypto';
+import { useNavigate } from "react-router-dom";
+import { loginInfoType } from '@/service/api.type';
 
 export function Login() {
-
-    const [loginInfo, setLoginInfo] = useState({
+    const navigate = useNavigate();
+    const [loginInfo, setLoginInfo] = useState<loginInfoType>({
         username: 'admin',
         password: '123456'
     });
-
+    const [loading, setLoading] = useState(false);
     const changeLoginInfo = (e, key) => {
         setLoginInfo({
             ...loginInfo,
             [key]: e.target.value
         })
     };
-
-    const login = async () => {
-        const res = await htttpService.post('/user/login', loginInfo)
-        console.log(res);
+    const login = async (e) => {
+        e.preventDefault();
+        setLoading(true)
+        await userLoginPost({
+            ...loginInfo,
+            password: encryptedPassword(loginInfo.password)
+        });
+        setLoading(false);
+        navigate('/Home')
     };
 
     return (
-        <>
+        <div className="overflow-hidden">
+            <Spline className="absolute top-[5vh] right-[-10vw] cursor-move" scene="https://prod.spline.design/OWX5BtzK9m2Fk19Z/scene.splinecode" />
             <h2 className="text-[14vh] font-black text-primary ">
                 <p>Meeting</p>
                 <p>Room</p>
                 <p>Booking</p>
                 <p>System</p>
             </h2>
-            <div className="h-[19vh] w-[20vw] bg-slate-300 rounded-lg absolute right-[15vw] top-[30vh] mx-0 shadow-xl max-w-[300px] min-w-[200px]">
-                <div className="my-[2vh] flex flex-col space-y-4 px-[1vw] ">
+            <div className="w-[20vw] bg-[#ffffff91] rounded-lg absolute right-[15vw] top-[30vh] mx-0 shadow-xl max-w-[300px] min-w-[200px]">
+                <div className="my-[2vh] flex flex-col space-y-4 px-[1vw]">
                     <label className="input input-bordered flex items-center gap-2 shadow-md">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -50,9 +60,15 @@ export function Login() {
                         </svg>
                         <input type="password" className="grow" placeholder="Password" value={loginInfo.password} onChange={(e) => changeLoginInfo(e, 'password')} />
                     </label>
-                    <button className="btn btn-primary shadow-2xl" onClick={login}>Login</button>
+                    <button className={`btn btn-primary shadow-2xl`} disabled={loading} onClick={login}>
+                        Login
+                        {
+                            loading ?
+                            <span className="loading loading-bars loading-xs"></span> : ''
+                        }
+                    </button>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

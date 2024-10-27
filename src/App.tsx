@@ -1,10 +1,11 @@
 import { Suspense, lazy, useState } from 'react'
-import { Routes, Route, Outlet, Link } from "react-router-dom";
+import { Routes, Route, Outlet, Link, Navigate, useLocation } from "react-router-dom";
 import lessStyles from '@/app.less'
 import '@/App.css'
 
 import { Login } from '@/pages/Login'
 import { Home } from '@/pages/Home'
+import { PrivateRoute } from '@/components/route/ProtectedRoute'
 
 // prefetch
 const PreFetchDemo = lazy(
@@ -27,6 +28,8 @@ const PreloadDemo = lazy(
 )
 
 function App() {
+  const isAuthenticated = localStorage.getItem('accessToken');
+
   const [count, setCounts] = useState('')
   const [show, setShow] = useState(false)
 
@@ -45,16 +48,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Login />}>
-        <Route index element={<Home />} />
-        {/* <Route path="about" element={<About />} /> */}
-        {/* <Route path="dashboard" element={<Dashboard />} /> */}
-
-        {/* Using path="*"" means "match anything", so this route
-              acts like a catch-all for URLs that we don't have explicit
-              routes for. */}
-        {/* <Route path="*" element={<NoMatch />} /> */}
-      </Route>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={ isAuthenticated ? <Navigate to="/home" replace /> : <Login /> }/>
+        <Route path="/home" element={ <PrivateRoute> <Home /> </PrivateRoute>}/>
     </Routes>
   )
 }
