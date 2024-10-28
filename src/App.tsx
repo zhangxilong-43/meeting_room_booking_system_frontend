@@ -5,6 +5,7 @@ import '@/App.css'
 
 import { Login } from '@/pages/Login'
 import { Home } from '@/pages/Home'
+import { Schedule } from '@/pages/Schedule'
 import { PrivateRoute } from '@/components/route/ProtectedRoute'
 
 // prefetch
@@ -51,6 +52,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={ isAuthenticated ? <Navigate to="/home" replace /> : <Login /> }/>
         <Route path="/home" element={ <PrivateRoute> <Home /> </PrivateRoute>}/>
+        <Route path="/schedule" element={ <PrivateRoute> <Schedule /> </PrivateRoute>}/>
     </Routes>
   )
 }

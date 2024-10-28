@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRef } from "react";
 import { meetingRoomListGet } from '@/service/api';
 import { meetingRoomListParamsType } from '@/service/api.type';
+import { useNavigate } from "react-router-dom";
 
 const tabelData = [
     {
@@ -101,6 +102,7 @@ interface tabelItemType {
 };
 
 export default () => {
+  const navigate = useNavigate();
   const actionRef = useRef(false);
   const [tabelData, setTabelData] = useState<tabelItemType[]>([]);
   const [meetingRoomListParams, setMeetingRoomListParams] = useState<meetingRoomListParamsType>({
@@ -115,6 +117,10 @@ export default () => {
     const { data } = await meetingRoomListGet(meetingRoomListParams)
     setTabelData(data.meetingRooms)
   }
+
+  const goSchedule = () => {
+    navigate('/schedule')
+  };
 
   useEffect(() => {
     if (actionRef.current) return;
@@ -163,7 +169,7 @@ export default () => {
                                 {item.description}
                             </td>
                             <th>
-                                <button className="btn btn-ghost btn-xs">details</button>
+                                <button className="btn btn-ghost btn-xs" onClick={goSchedule}>Schedule</button>
                             </th>
                         </tr>
                         ))

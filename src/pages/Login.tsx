@@ -26,7 +26,7 @@ export function Login() {
             password: encryptedPassword(loginInfo.password)
         });
         setLoading(false);
-        navigate('/Home')
+        navigate('/home')
     };
 
     return (
