@@ -48,12 +48,14 @@ function App() {
   }
 
   return (
-    <Routes>
+    <>
+      <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={ isAuthenticated ? <Navigate to="/home" replace /> : <Login /> }/>
         <Route path="/home" element={ <PrivateRoute> <Home /> </PrivateRoute>}/>
         <Route path="/schedule" element={ <PrivateRoute> <Schedule /> </PrivateRoute>}/>
-    </Routes>
+      </Routes>
+    </>
   )
 }
 
